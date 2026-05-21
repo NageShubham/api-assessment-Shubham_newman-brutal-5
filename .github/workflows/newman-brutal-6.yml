@@ -1,0 +1,157 @@
+name: Newman Brutal Pipeline 6
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+
+  # =========================
+  # JOB 1 — SMOKE
+  # =========================
+  smoke:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Create reports folder
+        run: mkdir -p reports
+
+      - name: Install Newman + Reporter
+        run: |
+          npm install -g newman newman-reporter-htmlextra
+
+      - name: Run Smoke Tests
+        run: |
+          newman run "Smoke Test.postman_collection.json" \
+            -e "primary.postman_environment.json" \
+            --reporters cli,htmlextra,json \
+            --reporter-htmlextra-export ./reports/smoke.html \
+            --reporter-json-export ./reports/smoke.json \
+            --timeout-request 20000
+
+      - name: Upload Smoke Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-report
+          path: ./reports/smoke.html
+
+
+  # =========================
+  # JOB 2 — REGRESSION
+  # =========================
+  regression:
+    needs: smoke
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Create reports folder
+        run: mkdir -p reports
+
+      - name: Install Newman + Reporter
+        run: |
+          npm install -g newman newman-reporter-htmlextra
+
+      - name: Run Regression Tests
+        run: |
+          newman run "Regression.postman_collection.json" \
+            -e "primary.postman_environment.json" \
+            -d "./data/regression-data.csv" \
+            --reporters cli,htmlextra,json \
+            --reporter-htmlextra-export ./reports/regression.html \
+            --reporter-json-export ./reports/regression.json \
+            --timeout-request 20000
+
+      - name: Upload Regression Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-report
+          path: ./reports/regression.html
+
+
+  # =========================
+  # JOB 3 — INTEGRATION
+  # =========================
+  integration:
+    needs: regression
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Create reports folder
+        run: mkdir -p reports
+
+      - name: Install Newman + Reporter
+        run: |
+          npm install -g newman newman-reporter-htmlextra
+
+      - name: Run Integration Tests
+        run: |
+          newman run "Integration.postman_collection.json" \
+            -e "primary.postman_environment.json" \
+            --reporters cli,htmlextra,json \
+            --reporter-htmlextra-export ./reports/integration.html \
+            --reporter-json-export ./reports/integration.json \
+            --timeout-request 20000
+
+      - name: Upload Integration Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-report
+          path: ./reports/integration.html
+
+
+  # =========================
+  # JOB 4 — PIPELINE SUMMARY
+  # =========================
+  pipeline-summary:
+    needs: [smoke, regression, integration]
+    if: always()
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Generate Summary
+        run: |
+          echo "## Newman Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "| Stage | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+
+          echo "| Smoke | ${{ needs.smoke.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Regression | ${{ needs.regression.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Integration | ${{ needs.integration.result }} |" >> $GITHUB_STEP_SUMMARY
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [[ "${{ needs.smoke.result }}" == "success" && \
+                "${{ needs.regression.result }}" == "success" && \
+                "${{ needs.integration.result }}" == "success" ]]; then
+            echo "### ALL TESTS PASSED ✅" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### PIPELINE FAILED ❌" >> $GITHUB_STEP_SUMMARY
+          fi

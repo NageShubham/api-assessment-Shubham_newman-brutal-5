@@ -1,0 +1,807 @@
+{
+  "info": {
+    "_postman_id": "afb914cf-fcf4-49b8-803d-545dedd261c5",
+    "name": "Integration",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "23297791"
+  },
+  "item": [
+    {
+      "name": "Request_1_DummyJSON_Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const jsonData = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Login success\", () => {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"djToken\",\r",
+              "    jsonData.accessToken\r",
+              ");\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"djUserId\",\r",
+              "    jsonData.id\r",
+              ");\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"djUsername\",\r",
+              "    jsonData.username\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"username\": \"emilys\",\r\n  \"password\": \"emilyspass\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{djBase}}/auth/login",
+          "host": [
+            "{{djBase}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Request_2_DummyJSON_Auth_Me",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const jsonData = pm.response.json();\r",
+              "\r",
+              "pm.test(\"User ID matches\", () => {\r",
+              "\r",
+              "    pm.expect(\r",
+              "        jsonData.id\r",
+              "    ).to.eql(\r",
+              "        parseInt(\r",
+              "            pm.environment.get(\"djUserId\")\r",
+              "        )\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"djEmail\",\r",
+              "    jsonData.email\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{djToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{djBase}}/auth/me",
+          "host": [
+            "{{djBase}}"
+          ],
+          "path": [
+            "auth",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Request_3_Premium_Products",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const products =\r",
+              "pm.response.json().products;\r",
+              "\r",
+              "const premium =\r",
+              "products[0];\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"premiumTitle\",\r",
+              "    premium.title\r",
+              ");\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"premiumPrice\",\r",
+              "    premium.price\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{djBase}}/products?limit=5&sortBy=price&order=desc",
+          "host": [
+            "{{djBase}}"
+          ],
+          "path": [
+            "products"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "5"
+            },
+            {
+              "key": "sortBy",
+              "value": "price"
+            },
+            {
+              "key": "order",
+              "value": "desc"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Request_4_Budget_Products",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const products =\r",
+              "pm.response.json().products;\r",
+              "\r",
+              "const budget =\r",
+              "products[0];\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"budgetTitle\",\r",
+              "    budget.title\r",
+              ");\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"budgetPrice\",\r",
+              "    budget.price\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{djBase}}/products?limit=5&sortBy=price&order=asc",
+          "host": [
+            "{{djBase}}"
+          ],
+          "path": [
+            "products"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "5"
+            },
+            {
+              "key": "sortBy",
+              "value": "price"
+            },
+            {
+              "key": "order",
+              "value": "asc"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Request_5_Price_Gap_Validation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const premium =\r",
+              "parseFloat(\r",
+              "    pm.environment.get(\"premiumPrice\")\r",
+              ");\r",
+              "\r",
+              "const budget =\r",
+              "parseFloat(\r",
+              "    pm.environment.get(\"budgetPrice\")\r",
+              ");\r",
+              "\r",
+              "pm.test(\r",
+              "    \"Premium price > Budget × 10\",\r",
+              "    function () {\r",
+              "\r",
+              "        pm.expect(premium)\r",
+              "            .to.be.above(\r",
+              "                budget * 10\r",
+              "            );\r",
+              "    }\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://httpbin.org/get",
+          "protocol": "https",
+          "host": [
+            "httpbin",
+            "org"
+          ],
+          "path": [
+            "get"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Request_6_FakeStore_Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const jsonData =\r",
+              "pm.response.json();\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"fsToken\",\r",
+              "    jsonData.token\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"username\": \"johnd\",\r\n  \"password\": \"m38rmF$\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://fakestoreapi.com/auth/login",
+          "protocol": "https",
+          "host": [
+            "fakestoreapi",
+            "com"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Request_7_FakeStore_Products_Analysis",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const products =\r",
+              "pm.response.json();\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"fsProductCount\",\r",
+              "    products.length\r",
+              ");\r",
+              "\r",
+              "let topRated =\r",
+              "products[0];\r",
+              "\r",
+              "products.forEach(product => {\r",
+              "\r",
+              "    if (\r",
+              "        product.rating.rate >\r",
+              "        topRated.rating.rate\r",
+              "    ) {\r",
+              "        topRated = product;\r",
+              "    }\r",
+              "});\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"topRatedTitle\",\r",
+              "    topRated.title\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{fsBase}}/products",
+          "host": [
+            "{{fsBase}}"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Request_8_Germany_Country_Info",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const country =\r",
+              "pm.response.json()[0];\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"capital\",\r",
+              "    country.capital[0]\r",
+              ");\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"germanPop\",\r",
+              "    country.population\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://restcountries.com/v3.1/name/germany?fields=name,capital,population",
+          "protocol": "https",
+          "host": [
+            "restcountries",
+            "com"
+          ],
+          "path": [
+            "v3.1",
+            "name",
+            "germany"
+          ],
+          "query": [
+            {
+              "key": "fields",
+              "value": "name,capital,population"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Request_9_Berlin_Weather",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const weather =\r",
+              "pm.response.json().current_weather;\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"berlinTemp\",\r",
+              "    weather.temperature\r",
+              ");\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"berlinWind\",\r",
+              "    weather.windspeed\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current_weather=true",
+          "protocol": "https",
+          "host": [
+            "api",
+            "open-meteo",
+            "com"
+          ],
+          "path": [
+            "v1",
+            "forecast"
+          ],
+          "query": [
+            {
+              "key": "latitude",
+              "value": "52.52"
+            },
+            {
+              "key": "longitude",
+              "value": "13.41"
+            },
+            {
+              "key": "current_weather",
+              "value": "true"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Request_10_Cross-System_User_Validation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const djUserId =\r",
+              "parseInt(\r",
+              "    pm.environment.get(\"djUserId\")\r",
+              ");\r",
+              "\r",
+              "if (djUserId <= 10) {\r",
+              "\r",
+              "    pm.test(\"Should return 200\", () => {\r",
+              "        pm.response.to.have.status(200);\r",
+              "    });\r",
+              "\r",
+              "    const jsonData =\r",
+              "    pm.response.json();\r",
+              "\r",
+              "    pm.test(\r",
+              "        \"Emails should differ\",\r",
+              "        () => {\r",
+              "\r",
+              "            pm.expect(\r",
+              "                jsonData.email\r",
+              "            ).to.not.eql(\r",
+              "                pm.environment.get(\"djEmail\")\r",
+              "            );\r",
+              "        }\r",
+              "    );\r",
+              "\r",
+              "} else {\r",
+              "\r",
+              "    pm.test(\"Should return 404\", () => {\r",
+              "        pm.response.to.have.status(404);\r",
+              "    });\r",
+              "\r",
+              "    console.log(\r",
+              "        \"Cross-system ID range finding documented\"\r",
+              "    );\r",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/users/{{djUserId}}",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "users",
+            "{{djUserId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Request_11_HTTPBin_Echo_Validation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const jsonData =\r",
+              "pm.response.json().json;\r",
+              "\r",
+              "pm.test(\"djUsername echoed\", () => {\r",
+              "    pm.expect(jsonData.djUsername)\r",
+              "        .to.eql(\r",
+              "            pm.environment.get(\"djUsername\")\r",
+              "        );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"premiumTitle echoed\", () => {\r",
+              "    pm.expect(jsonData.premiumTitle)\r",
+              "        .to.eql(\r",
+              "            pm.environment.get(\"premiumTitle\")\r",
+              "        );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"capital echoed\", () => {\r",
+              "    pm.expect(jsonData.capital)\r",
+              "        .to.eql(\r",
+              "            pm.environment.get(\"capital\")\r",
+              "        );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"berlinTemp echoed\", () => {\r",
+              "\r",
+              "    pm.expect(\r",
+              "        String(jsonData.berlinTemp)\r",
+              "    ).to.eql(\r",
+              "        String(\r",
+              "            pm.environment.get(\"berlinTemp\")\r",
+              "        )\r",
+              "    );\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"djUsername\": \"{{djUsername}}\",\r\n  \"premiumTitle\": \"{{premiumTitle}}\",\r\n  \"premiumPrice\": \"{{premiumPrice}}\",\r\n  \"budgetTitle\": \"{{budgetTitle}}\",\r\n  \"budgetPrice\": \"{{budgetPrice}}\",\r\n  \"capital\": \"{{capital}}\",\r\n  \"berlinTemp\": \"{{berlinTemp}}\",\r\n  \"topRatedTitle\": \"{{topRatedTitle}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{httpbinBase}}/anything",
+          "host": [
+            "{{httpbinBase}}"
+          ],
+          "path": [
+            "anything"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Request_12_Final Integration",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const jsonData =\r",
+              "pm.response.json();\r",
+              "\r",
+              "pm.test(\"Status 201\", () => {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"id is 101\", () => {\r",
+              "    pm.expect(jsonData.id)\r",
+              "        .to.eql(101);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Contains Berlin\", () => {\r",
+              "\r",
+              "    pm.expect(jsonData.body)\r",
+              "        .to.include(\"Berlin\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Contains djUsername\", () => {\r",
+              "\r",
+              "    pm.expect(jsonData.body)\r",
+              "        .to.include(\r",
+              "            pm.environment.get(\"djUsername\")\r",
+              "        );\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Contains premiumTitle\", () => {\r",
+              "\r",
+              "    pm.expect(jsonData.body)\r",
+              "        .to.include(\r",
+              "            pm.environment.get(\"premiumTitle\")\r",
+              "        );\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"title\": \"Integration Chain Complete\",\r\n  \"body\": \"DJ:{{djUsername}} ID:{{djUserId}} | Premium:{{premiumTitle}}@${{premiumPrice}} | Budget:{{budgetTitle}}@${{budgetPrice}} | FS Products:{{fsProductCount}} Top:{{topRatedTitle}} | Berlin:{{berlinTemp}}°C {{berlinWind}}kmh | Capital:{{capital}} Pop:{{germanPop}}\",\r\n  \"userId\": 1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "posts"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

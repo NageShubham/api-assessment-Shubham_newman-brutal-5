@@ -1,0 +1,518 @@
+{
+  "info": {
+    "_postman_id": "26547614-6fec-4cd8-9016-a4a7bbc0b599",
+    "name": "Smoke_Test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "23297791"
+  },
+  "item": [
+    {
+      "name": "POST_DummyJSON Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status should be 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "const jsonData = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Token starts with eyJ\", function () {\r",
+              "    pm.expect(jsonData.accessToken.startsWith(\"eyJ\")).to.eql(true);\r",
+              "});\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"djToken\",\r",
+              "    jsonData.accessToken\r",
+              ");\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"djRefreshToken\",\r",
+              "    jsonData.refreshToken\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"username\": \"emilys\",\r\n  \"password\": \"emilyspass\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{djBase}}/auth/login",
+          "host": [
+            "{{djBase}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_DummyJSON_Auth_Me",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status should be 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "const jsonData = pm.response.json();\r",
+              "\r",
+              "pm.test(\"id is integer\", function () {\r",
+              "    pm.expect(jsonData.id).to.be.a(\"number\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{djToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{djBase}}/auth/me",
+          "host": [
+            "{{djBase}}"
+          ],
+          "path": [
+            "auth",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_DummyJSON Product 1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status should be 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "const jsonData = pm.response.json();\r",
+              "\r",
+              "pm.test(\"id should be 1\", function () {\r",
+              "    pm.expect(jsonData.id).to.eql(1);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"price > 0\", function () {\r",
+              "    pm.expect(jsonData.price).to.be.above(0);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{djBase}}/products/1",
+          "host": [
+            "{{djBase}}"
+          ],
+          "path": [
+            "products",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Httpbin_GET",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status should be 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "const jsonData = pm.response.json();\r",
+              "\r",
+              "pm.test(\"headers object exists\", function () {\r",
+              "    pm.expect(jsonData.headers).to.be.an(\"object\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"url is string\", function () {\r",
+              "    pm.expect(jsonData.url).to.be.a(\"string\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{httpbinBase}}/get",
+          "host": [
+            "{{httpbinBase}}"
+          ],
+          "path": [
+            "get"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST_FakeStore_Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status should be 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "const jsonData = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Token exists\", function () {\r",
+              "    pm.expect(jsonData.token).to.be.a(\"string\");\r",
+              "});\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"fsToken\",\r",
+              "    jsonData.token\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"username\": \"johnd\",\r\n  \"password\": \"m38rmF$\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://fakestoreapi.com/auth/login",
+          "protocol": "https",
+          "host": [
+            "fakestoreapi",
+            "com"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_JSONPlaceholder Post 1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status should be 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "const jsonData = pm.response.json();\r",
+              "\r",
+              "pm.test(\"id === 1\", function () {\r",
+              "    pm.expect(jsonData.id).to.eql(1);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"userId === 1\", function () {\r",
+              "    pm.expect(jsonData.userId).to.eql(1);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts/1",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "posts",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_RestCountries_Germany",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status should be 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "const jsonData = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Berlin is capital\", function () {\r",
+              "\r",
+              "    pm.expect(\r",
+              "        jsonData[0].capital[0]\r",
+              "    ).to.eql(\"Berlin\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://restcountries.com/v3.1/name/germany?fields=name,capital",
+          "protocol": "https",
+          "host": [
+            "restcountries",
+            "com"
+          ],
+          "path": [
+            "v3.1",
+            "name",
+            "germany"
+          ],
+          "query": [
+            {
+              "key": "fields",
+              "value": "name,capital"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Open_Meteo_Weather",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status should be 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "const jsonData = pm.response.json();\r",
+              "\r",
+              "const temperature =\r",
+              "    jsonData.current_weather.temperature;\r",
+              "\r",
+              "pm.test(\"Temperature is finite number\", function () {\r",
+              "\r",
+              "    pm.expect(\r",
+              "        Number.isFinite(temperature)\r",
+              "    ).to.eql(true);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Temperature within realistic range\", function () {\r",
+              "\r",
+              "    pm.expect(temperature).to.be.within(-20, 45);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://api.open-meteo.com/v1/forecast?latitude=51.5&longitude=-0.1&current_weather=true",
+          "protocol": "https",
+          "host": [
+            "api",
+            "open-meteo",
+            "com"
+          ],
+          "path": [
+            "v1",
+            "forecast"
+          ],
+          "query": [
+            {
+              "key": "latitude",
+              "value": "51.5"
+            },
+            {
+              "key": "longitude",
+              "value": "-0.1"
+            },
+            {
+              "key": "current_weather",
+              "value": "true"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "if (pm.response.code >= 400) {\r",
+          "\r",
+          "    console.log(\"Smoke failed\");\r",
+          "\r",
+          "    postman.setNextRequest(null);\r",
+          "}"
+        ]
+      }
+    }
+  ]
+}

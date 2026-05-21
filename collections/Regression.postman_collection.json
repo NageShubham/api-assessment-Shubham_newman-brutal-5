@@ -1,0 +1,1200 @@
+{
+  "info": {
+    "_postman_id": "7b22e92a-8ee2-4fdb-bd20-c43a79e820c5",
+    "name": "Regression",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "23297791"
+  },
+  "item": [
+    {
+      "name": "Group_1_DummyJSON_DeepNew Folder",
+      "item": [
+        {
+          "name": "Request 1 — Products Full Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Total products 194\", () => {\r",
+                  "    pm.expect(jsonData.total).to.eql(194);\r",
+                  "});\r",
+                  "\r",
+                  "const ids = new Set();\r",
+                  "\r",
+                  "jsonData.products.forEach(product => {\r",
+                  "\r",
+                  "    pm.test(\"Price > 0\", () => {\r",
+                  "        pm.expect(product.price).to.be.above(0);\r",
+                  "    });\r",
+                  "\r",
+                  "    ids.add(product.id);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"No duplicate IDs\", () => {\r",
+                  "    pm.expect(ids.size).to.eql(jsonData.products.length);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{djBase}}/products?limit=0",
+              "host": [
+                "{{djBase}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request 2 — Users Full Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Total users 208\", () => {\r",
+                  "    pm.expect(jsonData.total).to.eql(208);\r",
+                  "});\r",
+                  "\r",
+                  "const emailRegex =\r",
+                  "/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\r",
+                  "\r",
+                  "jsonData.users.forEach(user => {\r",
+                  "\r",
+                  "    pm.test(\"Email valid\", () => {\r",
+                  "        pm.expect(\r",
+                  "            emailRegex.test(user.email)\r",
+                  "        ).to.eql(true);\r",
+                  "    });\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{djBase}}/users?limit=0",
+              "host": [
+                "{{djBase}}"
+              ],
+              "path": [
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request 3 — Todos Full Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Total todos 150\", () => {\r",
+                  "    pm.expect(jsonData.total).to.eql(254);\r",
+                  "});\r",
+                  "\r",
+                  "jsonData.todos.forEach(todo => {\r",
+                  "\r",
+                  "    pm.test(\"completed boolean\", () => {\r",
+                  "        pm.expect(todo.completed)\r",
+                  "            .to.be.a(\"boolean\");\r",
+                  "    });\r",
+                  "\r",
+                  "    pm.test(\"userId integer\", () => {\r",
+                  "        pm.expect(todo.userId)\r",
+                  "            .to.be.a(\"number\");\r",
+                  "    });\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{djBase}}/todos?limit=0",
+              "host": [
+                "{{djBase}}"
+              ],
+              "path": [
+                "todos"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request 4 — Product Category List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Array returned\", () => {\r",
+                  "    pm.expect(jsonData).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Length >= 5\", () => {\r",
+                  "    pm.expect(jsonData.length).to.be.above(5);\r",
+                  "});\r",
+                  "\r",
+                  "jsonData.forEach(category => {\r",
+                  "\r",
+                  "    pm.test(\"Category string\", () => {\r",
+                  "        pm.expect(category)\r",
+                  "            .to.be.a(\"string\");\r",
+                  "    });\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{djBase}}/products/category-list",
+              "host": [
+                "{{djBase}}"
+              ],
+              "path": [
+                "products",
+                "category-list"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request 5 — Auth Me Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Username is emilys\", () => {\r",
+                  "    pm.expect(jsonData.username)\r",
+                  "        .to.eql(\"emilys\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{djToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{djBase}}/auth/me",
+              "host": [
+                "{{djBase}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Group_2_HTTP",
+      "item": [
+        {
+          "name": "Request 6 — Headers Echo Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const headers =\r",
+                  "pm.response.json().headers;\r",
+                  "\r",
+                  "pm.test(\"Header 1 echoed\", () => {\r",
+                  "    pm.expect(headers[\"X-Client\"])\r",
+                  "        .to.eql(\"regression-suite\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Header 2 echoed\", () => {\r",
+                  "    pm.expect(headers[\"X-Build\"])\r",
+                  "        .to.eql(\"build-01\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Header 3 echoed\", () => {\r",
+                  "    pm.expect(headers[\"X-Env\"])\r",
+                  "        .to.eql(\"qa\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-client",
+                "value": "regression-suite",
+                "type": "text"
+              },
+              {
+                "key": "x-build",
+                "value": "build-01",
+                "type": "text"
+              },
+              {
+                "key": "x-env",
+                "value": "qa",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{httpbinBase}}/headers",
+              "host": [
+                "{{httpbinBase}}"
+              ],
+              "path": [
+                "headers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request 7 — POST Nested JSON Echo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Body echoed correctly\", () => {\r",
+                  "\r",
+                  "    pm.expect(\r",
+                  "        jsonData.json.user.name\r",
+                  "    ).to.eql(\"Emily\");\r",
+                  "\r",
+                  "    pm.expect(\r",
+                  "        jsonData.json.user.roles[0]\r",
+                  "    ).to.eql(\"admin\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"user\": {\r\n    \"name\": \"Emily\",\r\n    \"roles\": [\"admin\", \"editor\"]\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{httpbinBase}}/post",
+              "host": [
+                "{{httpbinBase}}"
+              ],
+              "path": [
+                "post"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request 8 — Delay Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Delay > 1000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime)\r",
+                  "        .to.be.above(1000);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Delay < 4000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime)\r",
+                  "        .to.be.below(4000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{httpbinBase}}/delay/1",
+              "host": [
+                "{{httpbinBase}}"
+              ],
+              "path": [
+                "delay",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Requests 9-UUID Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "const uuid = jsonData.uuid;\r",
+                  "\r",
+                  "const uuidRegex =\r",
+                  "/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;\r",
+                  "\r",
+                  "pm.test(\"UUID1 format valid\", function () {\r",
+                  "\r",
+                  "    pm.expect(\r",
+                  "        uuidRegex.test(uuid)\r",
+                  "    ).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.environment.set(\"uuid1\", uuid);\r",
+                  "\r",
+                  "console.log(\"UUID1 =\", uuid);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{httpbinBase}}/uuid",
+              "host": [
+                "{{httpbinBase}}"
+              ],
+              "path": [
+                "uuid"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request 10 — UUID Validation 2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "const uuid = jsonData.uuid;\r",
+                  "\r",
+                  "const uuidRegex =\r",
+                  "/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;\r",
+                  "\r",
+                  "pm.test(\"UUID2 format valid\", function () {\r",
+                  "\r",
+                  "    pm.expect(\r",
+                  "        uuidRegex.test(uuid)\r",
+                  "    ).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.environment.set(\"uuid2\", uuid);\r",
+                  "\r",
+                  "console.log(\"UUID2 =\", uuid);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{httpbinBase}}/uuid",
+              "host": [
+                "{{httpbinBase}}"
+              ],
+              "path": [
+                "uuid"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request 11 — UUID Validation 3 + Uniqueness Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "const uuid3 = jsonData.uuid;\r",
+                  "\r",
+                  "const uuidRegex =\r",
+                  "/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;\r",
+                  "\r",
+                  "pm.test(\"UUID3 format valid\", function () {\r",
+                  "\r",
+                  "    pm.expect(\r",
+                  "        uuidRegex.test(uuid3)\r",
+                  "    ).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.environment.set(\"uuid3\", uuid3);\r",
+                  "\r",
+                  "const uuid1 =\r",
+                  "pm.environment.get(\"uuid1\");\r",
+                  "\r",
+                  "const uuid2 =\r",
+                  "pm.environment.get(\"uuid2\");\r",
+                  "\r",
+                  "pm.test(\"UUID1 != UUID2\", function () {\r",
+                  "\r",
+                  "    pm.expect(uuid1)\r",
+                  "        .to.not.eql(uuid2);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"UUID2 != UUID3\", function () {\r",
+                  "\r",
+                  "    pm.expect(uuid2)\r",
+                  "        .to.not.eql(uuid3);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"UUID1 != UUID3\", function () {\r",
+                  "\r",
+                  "    pm.expect(uuid1)\r",
+                  "        .to.not.eql(uuid3);\r",
+                  "});\r",
+                  "\r",
+                  "console.log(\"UUID1 =\", uuid1);\r",
+                  "console.log(\"UUID2 =\", uuid2);\r",
+                  "console.log(\"UUID3 =\", uuid3);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{httpbinBase}}/uuid",
+              "host": [
+                "{{httpbinBase}}"
+              ],
+              "path": [
+                "uuid"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Group 3 - JSONPlaceholder",
+      "item": [
+        {
+          "name": "Request 12 — Posts Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const posts =\r",
+                  "pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"100 posts\", () => {\r",
+                  "    pm.expect(posts.length).to.eql(100);\r",
+                  "});\r",
+                  "\r",
+                  "posts.forEach((post, index) => {\r",
+                  "\r",
+                  "    pm.test(\"userId 1-10\", () => {\r",
+                  "        pm.expect(post.userId)\r",
+                  "            .within(1, 10);\r",
+                  "    });\r",
+                  "\r",
+                  "    if (index > 0) {\r",
+                  "\r",
+                  "        pm.test(\"Sorted ascending\", () => {\r",
+                  "            pm.expect(post.id)\r",
+                  "                .to.be.above(\r",
+                  "                    posts[index - 1].id\r",
+                  "                );\r",
+                  "        });\r",
+                  "    }\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{jpBase}}/posts",
+              "host": [
+                "{{jpBase}}"
+              ],
+              "path": [
+                "posts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request 13 — Users Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const users =\r",
+                  "pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"10 users\", () => {\r",
+                  "    pm.expect(users.length).to.eql(10);\r",
+                  "});\r",
+                  "\r",
+                  "const emails = new Set();\r",
+                  "\r",
+                  "users.forEach(user => {\r",
+                  "\r",
+                  "    emails.add(user.email);\r",
+                  "\r",
+                  "    pm.test(\"Has geo coordinates\", () => {\r",
+                  "\r",
+                  "        pm.expect(\r",
+                  "            user.address.geo.lat\r",
+                  "        ).to.exist;\r",
+                  "\r",
+                  "        pm.expect(\r",
+                  "            user.address.geo.lng\r",
+                  "        ).to.exist;\r",
+                  "    });\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Emails unique\", () => {\r",
+                  "    pm.expect(emails.size)\r",
+                  "        .to.eql(10);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{jpBase}}/users",
+              "host": [
+                "{{jpBase}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request 14 — Post Comments Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const comments =\r",
+                  "pm.response.json();\r",
+                  "\r",
+                  "comments.forEach(comment => {\r",
+                  "\r",
+                  "    pm.test(\"postId === 1\", () => {\r",
+                  "        pm.expect(comment.postId)\r",
+                  "            .to.eql(1);\r",
+                  "    });\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{jpBase}}/posts/1/comments",
+              "host": [
+                "{{jpBase}}"
+              ],
+              "path": [
+                "posts",
+                "1",
+                "comments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request 15 — Todos Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const todos =\r",
+                  "pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"200 todos\", () => {\r",
+                  "    pm.expect(todos.length)\r",
+                  "        .to.eql(200);\r",
+                  "});\r",
+                  "\r",
+                  "const completed =\r",
+                  "todos.filter(t => t.completed);\r",
+                  "\r",
+                  "const pending =\r",
+                  "todos.filter(t => !t.completed);\r",
+                  "\r",
+                  "pm.test(\"Some completed\", () => {\r",
+                  "    pm.expect(completed.length)\r",
+                  "        .to.be.above(0);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Some pending\", () => {\r",
+                  "    pm.expect(pending.length)\r",
+                  "        .to.be.above(0);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{jpBase}}/todos",
+              "host": [
+                "{{jpBase}}"
+              ],
+              "path": [
+                "todos"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Group 4 - FakeStore + RestCountries",
+      "item": [
+        {
+          "name": "Request 16 — FakeStore Products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const products =\r",
+                  "pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"20 products\", () => {\r",
+                  "    pm.expect(products.length)\r",
+                  "        .to.eql(20);\r",
+                  "});\r",
+                  "\r",
+                  "products.forEach(product => {\r",
+                  "\r",
+                  "    pm.test(\"Price > 0\", () => {\r",
+                  "        pm.expect(product.price)\r",
+                  "            .to.be.above(0);\r",
+                  "    });\r",
+                  "\r",
+                  "    pm.test(\"Rating exists\", () => {\r",
+                  "        pm.expect(product.rating)\r",
+                  "            .to.be.an(\"object\");\r",
+                  "    });\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{fsBase}}/products",
+              "host": [
+                "{{fsBase}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request 17 — FakeStore Electronics",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const products =\r",
+                  "pm.response.json();\r",
+                  "\r",
+                  "products.forEach(product => {\r",
+                  "\r",
+                  "    pm.test(\"Electronics category\", () => {\r",
+                  "\r",
+                  "        pm.expect(product.category)\r",
+                  "            .to.eql(\"electronics\");\r",
+                  "    });\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{fsBase}}/products/category/electronics",
+              "host": [
+                "{{fsBase}}"
+              ],
+              "path": [
+                "products",
+                "category",
+                "electronics"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request 18 — Europe Countries",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const countries =\r",
+                  "pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"More than 40 countries\", () => {\r",
+                  "    pm.expect(countries.length)\r",
+                  "        .to.be.above(40);\r",
+                  "});\r",
+                  "\r",
+                  "countries.forEach(country => {\r",
+                  "\r",
+                  "    pm.test(\"Region Europe\", () => {\r",
+                  "        pm.expect(country.region)\r",
+                  "            .to.eql(\"Europe\");\r",
+                  "    });\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rcBase}}/v3.1/region/europe",
+              "host": [
+                "{{rcBase}}"
+              ],
+              "path": [
+                "v3.1",
+                "region",
+                "europe"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request 19 — Germany Alpha Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const country =\r",
+                  "pm.response.json()[0];\r",
+                  "\r",
+                  "pm.test(\"Country Germany\", () => {\r",
+                  "    pm.expect(country.name.common)\r",
+                  "        .to.eql(\"Germany\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Capital Berlin\", () => {\r",
+                  "    pm.expect(country.capital[0])\r",
+                  "        .to.eql(\"Berlin\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{rcBase}}/v3.1/alpha/DEU",
+              "host": [
+                "{{rcBase}}"
+              ],
+              "path": [
+                "v3.1",
+                "alpha",
+                "DEU"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Data Driven Validation",
+      "item": [
+        {
+          "name": "Request 20 — Regression CSV Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const expectedStatus =\r",
+                  "parseInt(\r",
+                  "    pm.iterationData.get(\"expectedStatus\")\r",
+                  ");\r",
+                  "\r",
+                  "pm.test(\"Correct status\", () => {\r",
+                  "    pm.response.to.have.status(expectedStatus);\r",
+                  "});\r",
+                  "\r",
+                  "if (expectedStatus === 200) {\r",
+                  "\r",
+                  "    const field =\r",
+                  "    pm.iterationData.get(\"assertField\");\r",
+                  "\r",
+                  "    const expectedValue =\r",
+                  "    pm.iterationData.get(\"assertValue\");\r",
+                  "\r",
+                  "    const jsonData =\r",
+                  "    pm.response.json();\r",
+                  "\r",
+                  "    pm.test(\"Field validation\", () => {\r",
+                  "\r",
+                  "        pm.expect(\r",
+                  "            String(jsonData[field])\r",
+                  "        ).to.eql(expectedValue);\r",
+                  "    });\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{djBase}}{{endpoint}}",
+              "host": [
+                "{{djBase}}{{endpoint}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
