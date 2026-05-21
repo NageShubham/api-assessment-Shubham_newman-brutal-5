@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        environment: [dev1, staging env]
+        environment: [dev1, staging-env]
         collection: [auth-collection, data-collection]
 
     steps:
@@ -35,25 +35,25 @@ jobs:
       - name: Create reports directory
         run: mkdir -p reports
 
-      - name: Run Newman (Auth Collection)
+      - name: Run Auth Collection
         if: matrix.collection == 'auth-collection'
         run: |
-          newman run ./collections/${{ matrix.collection }}.json \
-            -e ./environments/${{ matrix.environment }}.json \
+          newman run ./collections/auth-collection.postman_collection.json \
+            -e ./environments/${{ matrix.environment }}.postman_environment.json \
             -d ./data/auth-scenarios.csv \
             --reporters cli,htmlextra,json \
-            --reporter-htmlextra-export ./reports/${{ matrix.collection }}-${{ matrix.environment }}.html \
+            --reporter-htmlextra-export ./reports/auth-${{ matrix.environment }}.html \
             --delay-request 300 \
             --timeout-request 15000
 
-      - name: Run Newman (Data Collection)
+      - name: Run Data Collection
         if: matrix.collection == 'data-collection'
         run: |
-          newman run ./collections/${{ matrix.collection }}.json \
-            -e ./environments/${{ matrix.environment }}.json \
-            -d ./data/product-scenarios.csv \
+          newman run ./collections/data-collection.postman_collection.json \
+            -e ./environments/${{ matrix.environment }}.postman_environment.json \
+            -d ./data/product-data.csv \
             --reporters cli,htmlextra,json \
-            --reporter-htmlextra-export ./reports/${{ matrix.collection }}-${{ matrix.environment }}.html \
+            --reporter-htmlextra-export ./reports/data-${{ matrix.environment }}.html \
             --delay-request 300 \
             --timeout-request 15000
 
@@ -82,8 +82,8 @@ jobs:
         run: |
           echo "## 📊 Newman Brutal CI Result Matrix" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Collection \\ Environment | dev | staging |" >> $GITHUB_STEP_SUMMARY
-          echo "|--------------------------|-----|---------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Collection \\ Environment | dev1 | staging-env |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------------------------|------|-------------|" >> $GITHUB_STEP_SUMMARY
 
           echo "| auth-collection          | PASS | PASS |" >> $GITHUB_STEP_SUMMARY
           echo "| data-collection          | PASS | PASS |" >> $GITHUB_STEP_SUMMARY
