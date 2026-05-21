@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        environment: [dev1.postman_environment, Staging env.postman_environment]
+        environment: [dev1.postman_environment, Staging_env.postman_environment]
         collection: [auth-collection.postman_collection, data-collection.postman_collection]
 
     steps:
@@ -36,7 +36,7 @@ jobs:
         run: mkdir -p reports
 
       - name: Run Newman (Auth Collection)
-        if: matrix.collection == 'auth-collection'
+        if: matrix.collection == 'auth-collection.postman_collection'
         run: |
           newman run ./collections/${{ matrix.collection }}.json \
             -e ./environments/${{ matrix.environment }}.json \
@@ -47,7 +47,7 @@ jobs:
             --timeout-request 15000
 
       - name: Run Newman (Data Collection)
-        if: matrix.collection == 'data-collection'
+        if: matrix.collection == 'data-collection.postman_collection'
         run: |
           newman run ./collections/${{ matrix.collection }}.json \
             -e ./environments/${{ matrix.environment }}.json \
