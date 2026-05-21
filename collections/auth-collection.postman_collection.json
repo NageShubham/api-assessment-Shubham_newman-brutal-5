@@ -33,7 +33,7 @@
               "\r",
               "// Assertions\r",
               "pm.test(\"Status code is 200\", function () {\r",
-              "    pm.response.to.have.status(200);\r",
+              "    pm.response.to.have.status(999);\r",
               "});\r",
               "\r",
               "pm.test(\"accessToken starts with eyJ and is valid string > 50 chars\", function () {\r",
