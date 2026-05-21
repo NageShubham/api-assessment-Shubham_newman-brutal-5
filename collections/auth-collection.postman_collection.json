@@ -1,0 +1,806 @@
+{
+  "info": {
+    "_postman_id": "7c35b79b-0b1a-4fc1-87e6-04711f8dfa0c",
+    "name": "auth-collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "23297791"
+  },
+  "item": [
+    {
+      "name": "POST_Request 1- Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Parse response JSON\r",
+              "const json = pm.response.json();\r",
+              "\r",
+              "// Capture tokens\r",
+              "pm.environment.set(\"capturedToken\", json.accessToken);\r",
+              "pm.environment.set(\"refreshToken\", json.refreshToken);\r",
+              "\r",
+              "// Decode JWT payload (middle segment)\r",
+              "const payload =\r",
+              "JSON.parse(atob(json.accessToken.split('.')[1]));\r",
+              "\r",
+              "// Capture JWT values\r",
+              "pm.environment.set(\"djUserId\", payload.id);\r",
+              "pm.environment.set(\"djUsername\", payload.username);\r",
+              "\r",
+              "// Current Unix timestamp (seconds)\r",
+              "const currentUnixTime = Math.floor(Date.now() / 1000);\r",
+              "\r",
+              "// Assertions\r",
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"accessToken starts with eyJ and is valid string > 50 chars\", function () {\r",
+              "    pm.expect(json.accessToken).to.be.a(\"string\");\r",
+              "    pm.expect(json.accessToken.startsWith(\"eyJ\")).to.be.true;\r",
+              "    pm.expect(json.accessToken.length).to.be.greaterThan(50);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"refreshToken is different from accessToken and > 50 chars\", function () {\r",
+              "    pm.expect(json.refreshToken).to.be.a(\"string\");\r",
+              "    pm.expect(json.refreshToken).to.not.equal(json.accessToken);\r",
+              "    pm.expect(json.refreshToken.length).to.be.greaterThan(50);\r",
+              "});\r",
+              "\r",
+              "\r",
+              "\r",
+              "\r",
+              "pm.test(\"exp is a future Unix timestamp\", function () {\r",
+              "    pm.expect(payload.exp).to.be.a(\"number\");\r",
+              "    pm.expect(payload.exp).to.be.greaterThan(currentUnixTime);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"username\": \"{{csv_username}}\",\r\n  \"password\": \"{{csv_password}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request_2_My_Profile",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));\r",
+              "pm.test(\"firstName is non-empty\", () => {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.firstName).to.not.be.empty;\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{capturedToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/me",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Requeste_3_HTTPBin_BearerAuth",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// capturedToken was set in Request 1 — nothing extra needed\r",
+              "const token = pm.collectionVariables.get('capturedToken');\r",
+              "console.log('Sending Bearer token to HTTPBin:', token);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Assert status 200\r",
+              "pm.test('Status is 200', function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "const responseBody = pm.response.json();\r",
+              "\r",
+              "// Assert authenticated === true\r",
+              "pm.test('authenticated === true', function () {\r",
+              "    pm.expect(responseBody.authenticated).to.be.true;\r",
+              "});\r",
+              "\r",
+              "// Assert token is present\r",
+              "pm.test('token is non-empty string', function () {\r",
+              "    pm.expect(responseBody.token).to.be.a('string');\r",
+              "    pm.expect(responseBody.token.length).to.be.greaterThan(0);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{capturedToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{httpbinBase}}/bearer",
+          "host": [
+            "{{httpbinBase}}"
+          ],
+          "path": [
+            "bearer"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST_Request_4_Refresh Token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const expectedStatus = parseInt(pm.iterationData.get('expectedStatus'));\r",
+              "const scenario = pm.iterationData.get('scenario');\r",
+              "\r",
+              "// Skip assertions for non-200 CSV iterations\r",
+              "if (expectedStatus !== 200) {\r",
+              "    console.log(`⚠️ [${scenario}] Skipping Request 4 assertions for failure row`);\r",
+              "    return;\r",
+              "}\r",
+              "\r",
+              "pm.test(`[${scenario}] Status is 200`, function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "const responseBody = pm.response.json();\r",
+              "\r",
+              "pm.test(`[${scenario}] New accessToken is a string`, function () {\r",
+              "    pm.expect(responseBody.accessToken).to.be.a('string');\r",
+              "    pm.expect(responseBody.accessToken.length).to.be.greaterThan(0);\r",
+              "});\r",
+              "\r",
+              "pm.test(`[${scenario}] New accessToken starts with eyJ`, function () {\r",
+              "    pm.expect(responseBody.accessToken).to.match(/^eyJ/);\r",
+              "});\r",
+              "\r",
+              "pm.collectionVariables.set('capturedToken', responseBody.accessToken);\r",
+              "console.log(`✅ [${scenario}] capturedToken updated after refresh`);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const expectedStatus = parseInt(pm.iterationData.get('expectedStatus'));\r",
+              "const scenario = pm.iterationData.get('scenario');\r",
+              "\r",
+              "if (expectedStatus !== 200) {\r",
+              "    console.log(`⚠️ [${scenario}] Skipping Request 4 — failure scenario`);\r",
+              "} else {\r",
+              "    const refreshToken = pm.collectionVariables.get('capturedRefreshToken');\r",
+              "    console.log(`✅ [${scenario}] Using refreshToken:`, refreshToken ? refreshToken.substring(0, 20) + '...' : 'MISSING');\r",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"refreshToken\": \"{{refreshToken}}\",\r\n  \"expiresInMins\": 30\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/refresh",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "refresh"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request_5_Get User_ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Assert 401 — no token should be rejected\r",
+              "pm.test('Status is 401 — no token rejected', function () {\r",
+              "    pm.response.to.have.status(401);\r",
+              "});\r",
+              "\r",
+              "const responseBody = pm.response.json();\r",
+              "\r",
+              "// Assert error message is present\r",
+              "pm.test('Error message is present', function () {\r",
+              "    pm.expect(responseBody.message).to.be.a('string');\r",
+              "    pm.expect(responseBody.message.trim().length).to.be.greaterThan(0);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// Intentionally sending NO token — negative test\r",
+              "console.log('Sending request with NO Authorization header');"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/auth/me",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request_6_Get My Profile (Broken Token)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Assert 401 — broken token should be rejected\r",
+              "pm.test('Status is 500 — broken token rejected', function () {\r",
+              "    pm.response.to.have.status(500);\r",
+              "});\r",
+              "\r",
+              "const responseBody = pm.response.json();\r",
+              "\r",
+              "// Assert error message is present\r",
+              "pm.test('Error message is present for broken token', function () {\r",
+              "    pm.expect(responseBody.message).to.be.a('string');\r",
+              "    pm.expect(responseBody.message.trim().length).to.be.greaterThan(0);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// Prepend 'BROKEN' to valid captured token to make it invalid\r",
+              "const validToken = pm.collectionVariables.get('capturedToken') || 'placeholder';\r",
+              "const brokenToken = 'BROKEN' + validToken;\r",
+              "pm.collectionVariables.set('brokenToken', brokenToken);\r",
+              "console.log('Broken token set:', brokenToken);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "BROKEN{{capturedToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/auth/me (Broken token)",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "me (Broken token)"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request_7_Get User by ID (Valid)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Assert status 200\r",
+              "pm.test('Status is 200', function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "const responseBody = pm.response.json();\r",
+              "\r",
+              "// Assert id === 1\r",
+              "pm.test('id === 1', function () {\r",
+              "    pm.expect(responseBody.id).to.eql(1);\r",
+              "});\r",
+              "\r",
+              "// Assert firstName is present\r",
+              "pm.test('firstName is present', function () {\r",
+              "    pm.expect(responseBody.firstName).to.be.a('string');\r",
+              "    pm.expect(responseBody.firstName.length).to.be.greaterThan(0);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// capturedToken in use — nothing extra needed\r",
+              "console.log('Fetching user id 1 with token:', pm.collectionVariables.get('capturedToken'));"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{capturedToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request_8_Get User_ID _Invalid",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Assert status 404\r",
+              "pm.test('Status is 404 — user not found', function () {\r",
+              "    pm.response.to.have.status(404);\r",
+              "});\r",
+              "\r",
+              "const responseBody = pm.response.json();\r",
+              "\r",
+              "// Assert error message is present\r",
+              "pm.test('Error message is present for 404', function () {\r",
+              "    pm.expect(responseBody.message).to.be.a('string');\r",
+              "    pm.expect(responseBody.message.length).to.be.greaterThan(0);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// No setup needed — testing a non-existent user ID\r",
+              "console.log('Testing non-existent user 9999 — expecting 404');"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{capturedToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/9999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            "9999"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request_9_HTTPBin_Header_Echo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Assert status 200\r",
+              "pm.test('Status is 200', function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "const responseBody = pm.response.json();\r",
+              "\r",
+              "// HTTPBin title-cases header names — so 'Authorization' not 'authorization'\r",
+              "const echoedAuth = responseBody.headers['Authorization'];\r",
+              "\r",
+              "// Assert Authorization header is echoed back\r",
+              "pm.test('Authorization header is echoed back', function () {\r",
+              "    pm.expect(echoedAuth).to.be.a('string');\r",
+              "    pm.expect(echoedAuth.length).to.be.greaterThan(0);\r",
+              "});\r",
+              "\r",
+              "// Assert echoed value starts with 'Bearer '\r",
+              "pm.test('Echoed Authorization starts with Bearer', function () {\r",
+              "    pm.expect(echoedAuth).to.match(/^Bearer /);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{capturedToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{httpbinBase}}/headers",
+          "host": [
+            "{{httpbinBase}}"
+          ],
+          "path": [
+            "headers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST_Request_10_JSONPlaceholder with Token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "const jsonData = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Title exists\", function () {\r",
+              "    pm.expect(jsonData.title).to.not.be.empty;\r",
+              "});\r",
+              "\r",
+              "console.log(\"POST RESPONSE:\", jsonData);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// Slice first 10 characters of capturedToken to use as post title\r",
+              "const token = pm.collectionVariables.get('capturedToken') || 'NO_TOKEN__';\r",
+              "const titleSnippet = token.substring(0, 10);\r",
+              "pm.collectionVariables.set('tokenSnippet', titleSnippet);\r",
+              "console.log('Post title (first 10 chars of token):', titleSnippet);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"title\": \"{{capturedToken.substring(0,10)}}\",\r\n  \"body\": \"test\",\r\n  \"userId\": 1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "posts"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "// Only re-login if current iteration expects a valid login (expectedStatus === 200)\r",
+          "const expectedStatus = parseInt(pm.iterationData.get('expectedStatus'));\r",
+          "const scenario = pm.iterationData.get('scenario');\r",
+          "\r",
+          "console.log(`\\n--- Iteration: ${scenario} | Expected: ${expectedStatus} ---`);\r",
+          "\r",
+          "if (expectedStatus === 200) {\r",
+          "    // For valid scenarios — login with CSV credentials to get fresh token\r",
+          "    const baseUrl = 'https://dummyjson.com';\r",
+          "    const username = pm.iterationData.get('csv_username');\r",
+          "    const password = pm.iterationData.get('csv_password');\r",
+          "\r",
+          "    const loginRequest = {\r",
+          "        url: baseUrl + '/auth/login',\r",
+          "        method: 'POST',\r",
+          "        header: [\r",
+          "            { key: 'Content-Type', value: 'application/json' }\r",
+          "        ],\r",
+          "        body: {\r",
+          "            mode: 'raw',\r",
+          "            raw: JSON.stringify({\r",
+          "                username: username,\r",
+          "                password: password,\r",
+          "                expiresInMins: 60\r",
+          "            })\r",
+          "        }\r",
+          "    };\r",
+          "\r",
+          "    pm.sendRequest(loginRequest, function (err, res) {\r",
+          "        if (err) {\r",
+          "            console.error('Pre-login failed:', err);\r",
+          "            return;\r",
+          "        }\r",
+          "\r",
+          "        const json = res.json();\r",
+          "\r",
+          "        if (json.accessToken) {\r",
+          "            pm.collectionVariables.set('capturedToken', json.accessToken);\r",
+          "            pm.collectionVariables.set('capturedRefreshToken', json.refreshToken);\r",
+          "            console.log(`✅ [${scenario}] Fresh token captured for valid login`);\r",
+          "        } else {\r",
+          "            console.error(`❌ [${scenario}] Login failed unexpectedly:`, JSON.stringify(json));\r",
+          "        }\r",
+          "    });\r",
+          "\r",
+          "} else {\r",
+          "    // For failure scenarios — clear token so negative tests work cleanly\r",
+          "    console.log(`⚠️ [${scenario}] Failure scenario — skipping pre-login`);\r",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "capturedToken",
+      "value": ""
+    },
+    {
+      "key": "refreshToken",
+      "value": ""
+    },
+    {
+      "key": "isLoggedIn",
+      "value": ""
+    },
+    {
+      "key": "capturedRefreshToken",
+      "value": ""
+    },
+    {
+      "key": "brokenToken",
+      "value": ""
+    },
+    {
+      "key": "tokenSnippet",
+      "value": ""
+    }
+  ]
+}

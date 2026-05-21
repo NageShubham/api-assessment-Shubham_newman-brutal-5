@@ -1,0 +1,795 @@
+{
+  "info": {
+    "_postman_id": "e5b8a3e6-8a39-4e1c-a62d-29cbc0d68412",
+    "name": "data-collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "23297791"
+  },
+  "item": [
+    {
+      "name": "GET_Request_1_Product Validation 1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const expectedStatus = Number(pm.iterationData.get(\"expectedStatus\"));\r",
+              "\r",
+              "pm.test(\"Status matches CSV\", function () {\r",
+              "    pm.response.to.have.status(expectedStatus);\r",
+              "});\r",
+              "\r",
+              "const data = pm.response.json();\r",
+              "\r",
+              "const minPrice = Number(pm.iterationData.get(\"minPrice\"));\r",
+              "const maxPrice = Number(pm.iterationData.get(\"maxPrice\"));\r",
+              "const expectedCategory = pm.iterationData.get(\"expectedCategory\");\r",
+              "\r",
+              "pm.test(\"Price is within CSV range\", function () {\r",
+              "    pm.expect(data.price).to.be.at.least(minPrice);\r",
+              "    pm.expect(data.price).to.be.at.most(maxPrice);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Category matches CSV\", function () {\r",
+              "    pm.expect(data.category).to.eql(expectedCategory);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/products/{{productId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products",
+            "{{productId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request2_Product Validation 2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const expectedStatus = parseInt(pm.iterationData.get(\"expectedStatus\"));\r",
+              "\r",
+              "pm.test(\"Status matches CSV\", function () {\r",
+              "    pm.response.to.have.status(expectedStatus);\r",
+              "});\r",
+              "\r",
+              "if (pm.response.code === 200) {\r",
+              "\r",
+              "    const data = pm.response.json();\r",
+              "\r",
+              "    const minPrice = parseFloat(pm.iterationData.get(\"minPrice\"));\r",
+              "    const maxPrice = parseFloat(pm.iterationData.get(\"maxPrice\"));\r",
+              "    const expectedCategory = pm.iterationData.get(\"expectedCategory\");\r",
+              "\r",
+              "    pm.test(\"Price is within CSV range (±$1 rule)\", function () {\r",
+              "        pm.expect(data.price).to.be.at.least(minPrice);\r",
+              "        pm.expect(data.price).to.be.at.most(maxPrice);\r",
+              "    });\r",
+              "\r",
+              "    pm.test(\"Category matches CSV\", function () {\r",
+              "        pm.expect(data.category).to.eql(expectedCategory);\r",
+              "    });\r",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/products/{{productId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products",
+            "{{productId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request_3_Product Validation 3",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const expectedStatus = parseInt(pm.iterationData.get(\"expectedStatus\"));\r",
+              "\r",
+              "pm.test(\"Status matches CSV\", function () {\r",
+              "    pm.response.to.have.status(expectedStatus);\r",
+              "});\r",
+              "\r",
+              "if (pm.response.code === 200) {\r",
+              "\r",
+              "    const data = pm.response.json();\r",
+              "\r",
+              "    const minPrice = parseFloat(pm.iterationData.get(\"minPrice\"));\r",
+              "    const maxPrice = parseFloat(pm.iterationData.get(\"maxPrice\"));\r",
+              "    const expectedCategory = pm.iterationData.get(\"expectedCategory\");\r",
+              "\r",
+              "    pm.test(\"Price is within CSV range (±$1 rule)\", function () {\r",
+              "        pm.expect(data.price).to.be.at.least(minPrice);\r",
+              "        pm.expect(data.price).to.be.at.most(maxPrice);\r",
+              "    });\r",
+              "\r",
+              "    pm.test(\"Category matches CSV\", function () {\r",
+              "        pm.expect(data.category).to.eql(expectedCategory);\r",
+              "    });\r",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/products/{{productId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products",
+            "{{productId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request_4_Product Validation 4",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const expectedStatus = parseInt(pm.iterationData.get(\"expectedStatus\"));\r",
+              "\r",
+              "pm.test(\"Status matches CSV\", function () {\r",
+              "    pm.response.to.have.status(expectedStatus);\r",
+              "});\r",
+              "\r",
+              "if (pm.response.code === 200) {\r",
+              "\r",
+              "    const data = pm.response.json();\r",
+              "\r",
+              "    const minPrice = parseFloat(pm.iterationData.get(\"minPrice\"));\r",
+              "    const maxPrice = parseFloat(pm.iterationData.get(\"maxPrice\"));\r",
+              "    const expectedCategory = pm.iterationData.get(\"expectedCategory\");\r",
+              "\r",
+              "    pm.test(\"Price is within CSV range (±$1 rule)\", function () {\r",
+              "        pm.expect(data.price).to.be.at.least(minPrice);\r",
+              "        pm.expect(data.price).to.be.at.most(maxPrice);\r",
+              "    });\r",
+              "\r",
+              "    pm.test(\"Category matches CSV\", function () {\r",
+              "        pm.expect(data.category).to.eql(expectedCategory);\r",
+              "    });\r",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/products/{{productId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products",
+            "{{productId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request_5_Product Validation 5",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const expectedStatus = parseInt(pm.iterationData.get(\"expectedStatus\"));\r",
+              "\r",
+              "pm.test(\"Status matches CSV\", function () {\r",
+              "    pm.response.to.have.status(expectedStatus);\r",
+              "});\r",
+              "\r",
+              "if (pm.response.code === 200) {\r",
+              "\r",
+              "    const data = pm.response.json();\r",
+              "\r",
+              "    const minPrice = parseFloat(pm.iterationData.get(\"minPrice\"));\r",
+              "    const maxPrice = parseFloat(pm.iterationData.get(\"maxPrice\"));\r",
+              "    const expectedCategory = pm.iterationData.get(\"expectedCategory\");\r",
+              "\r",
+              "    pm.test(\"Price is within CSV range (±$1 rule)\", function () {\r",
+              "        pm.expect(data.price).to.be.at.least(minPrice);\r",
+              "        pm.expect(data.price).to.be.at.most(maxPrice);\r",
+              "    });\r",
+              "\r",
+              "    pm.test(\"Category matches CSV\", function () {\r",
+              "        pm.expect(data.category).to.eql(expectedCategory);\r",
+              "    });\r",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/products/{{productId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products",
+            "{{productId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request_6_products_limit_0",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const data = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Total products === 194\", function () {\r",
+              "    pm.expect(data.total).to.eql(194);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"All prices > 0\", function () {\r",
+              "    data.products.forEach(p => {\r",
+              "        pm.expect(p.price).to.be.above(0);\r",
+              "    });\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/products?limit=0",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "0"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request_7_Category_List",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const data = pm.response.json();\r",
+              "\r",
+              "const expectedCount = 24; // adjust after checking API\r",
+              "\r",
+              "pm.test(\"Category count matches\", function () {\r",
+              "    pm.expect(data.length).to.eql(expectedCount);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/products/category-list",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products",
+            "category-list"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request_8_RestCountries",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const data = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Country response is array\", function () {\r",
+              "    pm.expect(data).to.be.an(\"array\");\r",
+              "});\r",
+              "\r",
+              "// Save lat/lon for next request\r",
+              "pm.environment.set(\"lat\", data[0].latlng[0]);\r",
+              "pm.environment.set(\"lon\", data[0].latlng[1]);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://restcountries.com/v3.1/name/{{countryName}}",
+          "protocol": "https",
+          "host": [
+            "restcountries",
+            "com"
+          ],
+          "path": [
+            "v3.1",
+            "name",
+            "{{countryName}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request_9_Open-Meteo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const data = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Weather object exists\", function () {\r",
+              "    pm.expect(data.current_weather).to.exist;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Temperature exists\", function () {\r",
+              "    pm.expect(data.current_weather.temperature).to.not.be.undefined;\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://api.open-meteo.com/v1/forecast?latitude={{lat}}&longitude={{lon}}&current_weather=true",
+          "protocol": "https",
+          "host": [
+            "api",
+            "open-meteo",
+            "com"
+          ],
+          "path": [
+            "v1",
+            "forecast"
+          ],
+          "query": [
+            {
+              "key": "latitude",
+              "value": "{{lat}}"
+            },
+            {
+              "key": "longitude",
+              "value": "{{lon}}"
+            },
+            {
+              "key": "current_weather",
+              "value": "true"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request_10_Second country",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://restcountries.com/v3.1/name/{{countryName}}",
+          "protocol": "https",
+          "host": [
+            "restcountries",
+            "com"
+          ],
+          "path": [
+            "v3.1",
+            "name",
+            "{{countryName}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request_11_Comments_of_Post",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const data = pm.response.json();\r",
+              "const postId = Number(pm.environment.get(\"postId\"));\r",
+              "\r",
+              "pm.test(\"Response is array\", function () {\r",
+              "    pm.expect(data).to.be.an(\"array\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Each comment has correct postId\", function () {\r",
+              "    data.forEach(comment => {\r",
+              "        pm.expect(comment.postId).to.eql(postId);\r",
+              "    });\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts/{{postId}}/comments",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "posts",
+            "{{postId}}",
+            "comments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request_12_User_Posts",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const data = pm.response.json();\r",
+              "const userId = parseInt(pm.environment.get(\"userId\"));\r",
+              "\r",
+              "pm.test(\"Response is array\", function () {\r",
+              "    pm.expect(data).to.be.an(\"array\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"All posts belong to user\", function () {\r",
+              "    data.forEach(p => {\r",
+              "        pm.expect(p.userId).to.eql(userId);\r",
+              "    });\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/users/{{userId}}/posts",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "users",
+            "{{userId}}",
+            "posts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request_13_Single_Post",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const data = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Post has title\", function () {\r",
+              "    pm.expect(data.title).to.exist;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Post has body\", function () {\r",
+              "    pm.expect(data.body).to.exist;\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts/1",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "posts",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET_Request_14_HTTPBin_Dealy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Response time > 2000ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.above(2000);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time < 5000ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(6000);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://httpbin.org/delay/2",
+          "protocol": "https",
+          "host": [
+            "httpbin",
+            "org"
+          ],
+          "path": [
+            "delay",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST_Request_15_Audit_Post",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const data = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Status is 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"validatedProducts is correct\", function () {\r",
+              "    pm.expect(data.validatedProducts).to.eql(20);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"validatedProducts\": 20\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "posts"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
